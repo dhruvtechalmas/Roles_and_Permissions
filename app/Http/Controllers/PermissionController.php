@@ -16,7 +16,7 @@ class PermissionController extends Controller
         return view('permissions.list', compact('permissions'));
     }
 
-    //Create permission page
+    //Create permission page    
     public function create()
     {
         return view('permissions.create');
@@ -40,7 +40,8 @@ class PermissionController extends Controller
 
 
     //edit a permission in db
-    public function edit(int $id) {
+    public function edit(int $id)
+    {
 
         $permission = Permission::findorfail($id);
         return view('permissions.edit', compact('permission'));
@@ -48,46 +49,46 @@ class PermissionController extends Controller
 
 
     //update a permission 
-    public function update(int $id, Request $request) {
+    public function update(int $id, Request $request)
+    {
         $permission = Permission::findorfail($id);
 
-     $validator = Validator::make($request->all(), [
-            'name' => 'required|min:3|unique:permissions,name,$id,id'
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|min:3|unique:permissions,name,' . $id . ',id'
         ]);
         if ($validator->passes()) {
-            
-         $permission -> name = $request->name;
-         $permission->save();
+
+            $permission->name = $request->name;
+            $permission->save();
 
             return redirect()->route('permissions.index')->with('success', 'Permission Update Successfully');
         } else {
 
             return redirect()->route('permissions.edit', $id)->withInput()->withErrors($validator);
         }
-
     }
 
     //Destroy a permission 
-    public function destroy(Request $request) {
+    public function destroy(Request $request)
+    {
 
-    $id = $request->id;
+        $id = $request->id;
 
-     $permission = Permission::find($id);
+        $permission = Permission::find($id);
 
-     if($permission == null){
+        if ($permission == null) {
 
-        session()->flash('error', 'Permission Not Found');
-        return response()->json([
-            'status' => false
-        ]);
-     }
+            session()->flash('error', 'Permission Not Found');
+            return response()->json([
+                'status' => false
+            ]);
+        }
 
-     $permission -> delete();
+        $permission->delete();
 
-      session()->flash('success', 'Permission deleted successfully');
+        session()->flash('success', 'Permission deleted successfully');
         return response()->json([
             'status' => true
         ]);
-     
     }
 }

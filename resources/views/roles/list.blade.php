@@ -9,11 +9,11 @@
     <x-slot name="header">
         <div class="container-fluid">
             <div class="d-flex justify-content-between align-items-center">
-                <h2 class="mb-0 fs-4 fw-semibold">
-                   Permissions
+                <h2 class="mb-0 fs-3 fw-semibold">
+                   Roles 
                 </h2>
 
-                <a href="{{ route('permissions.create') }}" class="btn btn-primary btn-sm px-4">
+                <a href="{{ route('roles.create') }}" class="btn btn-primary btn-sm px-4">
                     Create
                 </a>
             </div>
@@ -27,30 +27,32 @@
 
             <div class="card shadow-sm">
                 <div class="card-body p-4">
-                    
+
                     <table class="table table-bordered table-hover align-middle mb-0">
                         <thead class="table-light">
                             <tr>
                                 <th width="10%">ID</th>
                                 <th>Name</th>
-                                <th>Created</th>
+                                <th>Permissions</th>
+                                <th width="10%">Created</th>
                                 <th width="20%" class="text-center">Action</th>
                             </tr>
                         </thead>
                         <tbody>
-                            @if ($permissions->IsNotEmpty())
-                            @foreach($permissions as $permission)
+                            @if ($roles->IsNotEmpty())
+                            @foreach($roles as $role)
 
                             <tr>
-                                <td>{{$permission -> id}}</td>
-                                <td>{{$permission -> name}}</td>
-                                <td>{{ $permission->created_at->format('d-m-Y') }} </td>
+                                <td>{{$role -> id}}</td>
+                                <td>{{$role -> name}}</td>
+                                <td>{{$role -> permissions -> pluck('name') -> implode(', ')}}</td>
+                                <td width="10%">{{ $role->created_at->format('d-m-Y') }} </td>
                                 <td class="text-center">
-                                    <a href="{{route('permissions.edit',$permission->id)}}" class="btn btn-warning btn-sm me-1">
+                                    <a href="{{route('roles.edit',$role->id)}}" class="btn btn-warning btn-sm me-1">
                                         Edit
                                     </a>
 
-                                   <a href="javascript:void(0);" onclick="deletePermission({{ $permission->id }})" class="btn btn-danger btn-sm me-1">
+                                   <a href="javascript:void(0);" onclick="deleteRole({{ $role->id }})" class="btn btn-danger btn-sm me-1">
                                         Delete
                                     </a>
                                 </td>
@@ -61,8 +63,8 @@
                         </tbody>
                     </table>
 
-                     <div class="my-3">
-                        {{ $permissions->links() }}
+                    <div class="my-3">
+                        {{ $roles->links() }}
                     </div>
 
                 </div>
@@ -73,12 +75,12 @@
 
     <x-slot name="script">
         
-    <script type="text/javascript">
+        <script type="text/javascript">
 
-        function deletePermission(id){
-            if(confirm("Are You Sure You Want to Delete?")){
+          function deleteRole(id){
+             if(confirm("Are You Sure You Want to Delete?")){
                 $.ajax({
-                    url : '{{route("permissions.destroy")}}',
+                    url : '{{route("roles.destroy")}}',
                     type : 'delete',
                     data : {id:id},
                     dataType : 'json',
@@ -86,7 +88,7 @@
                         'x-csrf-token' : '{{ csrf_token() }}'
                     },  
                     success : function(response){
-                        window.location.href = '{{route("permissions.index")}}'
+                        window.location.href = '{{route("roles.index")}}'
                     }
                 });
             }
