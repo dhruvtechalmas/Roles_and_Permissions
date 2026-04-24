@@ -13,13 +13,13 @@ use Illuminate\Support\Facades\Hash;
 class UserController extends Controller implements HasMiddleware
 {
 
-      public static  function middleware(): array
+    public static  function middleware(): array
     {
         return [
-            new Middleware('permission:view users', only: ['users.index']),
-            new Middleware('permission:view users', only: ['users.edit']),
-            // new Middleware('permission:view roles', only: ['create']),
-            // new Middleware('permission:view roles', only: ['destroy'])
+            new Middleware('permission:View users', only: ['index']),
+            new Middleware('permission:Create users', only: ['create']),
+            new Middleware('permission:Edit users', only: ['edit']),
+            new Middleware('permission:Delete users', only: ['destroy']),
         ];
     }
 
@@ -30,6 +30,7 @@ class UserController extends Controller implements HasMiddleware
     {
         $users = User::latest()->paginate(10);
         return view('users.list', compact('users'));
+
     }
 
     /**
@@ -47,9 +48,9 @@ class UserController extends Controller implements HasMiddleware
      */
     public function store(Request $request)
     {
-         $validator = Validator::make($request->all(), [
+        $validator = Validator::make($request->all(), [
             'name' =>   'required|min:3',
-            'email' =>  'required|unique:users:email',
+            'email' =>  'required|unique:users,email',
             'password' =>   'required|min:5|same:confirm_password',
             'confirm_password' =>   'required|min:5',
 
@@ -63,7 +64,6 @@ class UserController extends Controller implements HasMiddleware
         $user->name = $request->name;
         $user->email = $request->email;
         $user->password = Hash::make($request->password);
-        $user->email = $request->email;
         $user->save();
 
         $user->syncRoles($request->role);
@@ -108,13 +108,30 @@ class UserController extends Controller implements HasMiddleware
         $user->syncRoles($request->role);
 
         return redirect()->route('users.index', $id)->with('success', 'User Updated SuccessFully');
+
+
+        
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(Request $request)
     {
-        //
+        $user = User::find($request->id);
+
+        if ($user == null) {
+            session()->flash('error', 'User Not Found');
+            return response()->json([
+                'status' => false
+            ]);
+        }
+
+        $user->delete();
+
+        session()->flash('success', 'User Delete SuccessFully');
+        return response()->json([
+            'status' => true
+        ]);
     }
 }

@@ -16,17 +16,18 @@ class ArticleController extends Controller implements HasMiddleware
     public static  function middleware(): array
     {
         return [
-            new Middleware('permission:view articles', only: ['articles.index']),
-            new Middleware('permission:view articles', only: ['articles.edit']),
-            new Middleware('permission:view articles', only: ['articles.create']),
-            new Middleware('permission:view articles', only: ['articles.destroy'])
+            new Middleware('permission:View articles', only: ['index']),
+            new Middleware('permission:Create articles', only: ['create']),
+            new Middleware('permission:Edit articles', only: ['edit']),
+            new Middleware('permission:Delete articles', only: ['destroy']),
         ];
     }
-
     /**
      * Display a listing of the resource.
      */
-    public function index()
+   
+   
+        public function index()
     {
         $articles = Article::latest()->paginate(25); //  latest() Means Order BY Created_at DESC
         return view('articles.list', compact('articles'));

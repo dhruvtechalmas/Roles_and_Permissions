@@ -13,16 +13,16 @@ use Illuminate\Routing\Controllers\Middleware;
 class RoleController extends Controller  implements HasMiddleware
 {
 
-      public static  function middleware(): array
+    public static  function middleware(): array
     {
         return [
-            new Middleware('permission:view roles', only: ['roles.index']),
-            new Middleware('permission:view roles', only: ['roles.edit']),
-            new Middleware('permission:view roles', only: ['roles.create']),
-            new Middleware('permission:view roles', only: ['roles.destroy'])
+            new Middleware('permission:View roles', only: ['index']),
+            new Middleware('permission:Create roles', only: ['create' ]),
+            new Middleware('permission:Edit roles', only: ['edit']),
+            new Middleware('permission:Delete roles', only: ['destroy']),
         ];
     }
-    
+
     //show roles page
     public function index()
     {
@@ -75,61 +75,59 @@ class RoleController extends Controller  implements HasMiddleware
         $role = Role::findorfail($id);
 
         $haspermissions  = $role->permissions->pluck('name');
-        $permissions = Permission::orderBy('name', 'ASC')->get();   
+        $permissions = Permission::orderBy('name', 'ASC')->get();
 
 
         return view('roles.edit', compact('haspermissions', 'permissions', 'role'));
     }
 
-    public function update(int $id, Request $request){
+    public function update(int $id, Request $request)
+    {
 
         $role = Role::findorfail($id);
 
-         $validator = Validator::make($request->all(), [
+        $validator = Validator::make($request->all(), [
 
-            'name' => 'required|unique:roles,name,'.$id.',id|min:3'
+            'name' => 'required|unique:roles,name,' . $id . ',id|min:3'
         ]);
 
         if ($validator->passes()) {
-           $role->name = $request->name;
-           $role->save();
+            $role->name = $request->name;
+            $role->save();
 
             if (!empty($request->permission)) {
-               $role->syncPermissions($request->permission);
-
-             }else{
+                $role->syncPermissions($request->permission);
+            } else {
                 $role->syncPermissions([]);
-             }
-               
+            }
+
             return redirect()->route('roles.index')->with('success', 'Role Update Successfully.');
-    
         } else {
-    
-            return redirect()->route('roles.edit',$id)->withInput()->withErrors($validator);
+
+            return redirect()->route('roles.edit', $id)->withInput()->withErrors($validator);
         }
-           
     }
 
-    public function destroy(Request $request){
+    public function destroy(Request $request)
+    {
 
         $id = $request->id;
 
         $role = Role::find($id);
 
-        if($role == null){
-              session()->flash('error','Role not Found.');
+        if ($role == null) {
+            session()->flash('error', 'Role not Found.');
             return response()->json([
                 'status' => false
             ]);
         }
 
         $role->delete();
-     
-        session()->flash('success','Role Deleted SuccessFully.');
+
+        session()->flash('success', 'Role Deleted SuccessFully.');
 
         return response()->json([
             'status' => true
         ]);
-
     }
 }

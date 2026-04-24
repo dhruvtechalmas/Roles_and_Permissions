@@ -13,12 +13,12 @@
                    Users 
                 </h2>
 
-                {{-- @can('Create users') --}}
-
+                @can('Create users')
                 <a href="{{ route('users.create') }}" class="btn btn-primary btn-sm px-4">
                     Create
                 </a>
-                {{-- @endcan --}}
+                @endcan
+
             </div>
         </div>
     </x-slot>
@@ -58,10 +58,13 @@
                                         Edit
                                     </a>
                                     @endcan
-{{-- 
-                                   <a href="javascript:void(0);" onclick="deleteRole({{ $role->id }})" class="btn btn-danger btn-sm me-1">
+
+                                  @can('Delete users')
+                                   <a href="javascript:void(0);" onclick="deleteUser({{ $user->id }})" class="btn btn-danger btn-sm me-1">
                                         Delete
-                                    </a> --}}
+                                    </a> 
+                                  @endcan
+
                                 </td>
                             </tr>
                             @endforeach
@@ -84,10 +87,10 @@
         
         <script type="text/javascript">
 
-          function deleteRole(id){
+          function deleteUser(id){
              if(confirm("Are You Sure You Want to Delete?")){
                 $.ajax({
-                    url : '{{route("roles.destroy")}}',
+                    url : '{{route("users.destroy")}}',
                     type : 'delete',
                     data : {id:id},
                     dataType : 'json',
@@ -95,7 +98,7 @@
                         'x-csrf-token' : '{{ csrf_token() }}'
                     },  
                     success : function(response){
-                        window.location.href = '{{route("roles.index")}}'
+                        window.location.href = '{{route("users.index")}}'
                     }
                 });
             }
