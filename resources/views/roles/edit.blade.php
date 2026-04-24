@@ -28,7 +28,6 @@
                     <div class="card shadow-sm">
                         <div class="card-body p-4">
 
-                            <h3 class="text-center mb-4">Form</h3>
 
                             <form action="{{route('roles.update', $role->id)}}" method="POST">
                                 @csrf

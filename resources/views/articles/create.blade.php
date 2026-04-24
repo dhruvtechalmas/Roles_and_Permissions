@@ -10,10 +10,10 @@
         <div class="container-fluid">
             <div class="d-flex justify-content-between align-items-center">
                 <h2 class="mb-0 fs-4 fw-semibold">
-                    Permissions / Create
+                    Articles / Create
                 </h2>
 
-                <a href="{{ route('permissions.index') }}" class="btn btn-primary btn-sm">
+                <a href="{{ route('articles.index') }}" class="btn btn-primary btn-sm">
                     Back
                 </a>
             </div>
@@ -29,26 +29,38 @@
                         <div class="card-body p-4">
 
 
-                            <form action="{{route('permissions.store')}}" method="POST">
+                            <form action="{{route('articles.store')}}" method="POST">
                                 @csrf
 
                                 <div class="mb-3">
-                                    <label for="name" class="form-label">Name:</label>
 
-                                    <input
-                                        type="text"
-                                        id="name"
-                                        name="name"
-                                        value="{{old('name') }}"
-                                        class="form-control @error('name') is-invalid @enderror"
-                                        placeholder="Enter Name"
-                                    >
+                                    <label for="name" class="form-label">Title:</label>
+                                    <input type="text" id="title" name="title" value="{{old('title') }}" class="form-control 
+                                    @error('title') is-invalid @enderror"
+                                    placeholder="Enter title">
 
-                                    @error('name')
+                                    @error('title')
                                         <div class="invalid-feedback">
                                             {{ $message }}
                                         </div>
                                     @enderror
+
+                                     <label for="name" class="form-label">Content:</label>
+                                     <textarea name="text"  placeholder="Content"   id="text" cols="30" rows="10" class="form-control">{{old('text') }}</textarea>
+
+
+                                    <label for="author" class="form-label">Author:</label>
+                                    <input type="text" id="author" name="author" value="{{old('author') }}" class="form-control 
+                                    @error('author') is-invalid @enderror"
+                                    placeholder="Enter Author">
+
+                                    @error('author')
+                                        <div class="invalid-feedback">
+                                            {{ $message }}
+                                        </div>
+                                    @enderror
+
+
                                 </div>
 
                                 <div class="text-center">

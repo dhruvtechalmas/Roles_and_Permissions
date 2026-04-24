@@ -13,9 +13,12 @@
                    Roles 
                 </h2>
 
+                @can('Create roles')
+
                 <a href="{{ route('roles.create') }}" class="btn btn-primary btn-sm px-4">
                     Create
                 </a>
+                @endcan
             </div>
         </div>
     </x-slot>
@@ -48,13 +51,18 @@
                                 <td>{{$role -> permissions -> pluck('name') -> implode(', ')}}</td>
                                 <td width="10%">{{ $role->created_at->format('d-m-Y') }} </td>
                                 <td class="text-center">
+
+                                    @can('Edit roles')
                                     <a href="{{route('roles.edit',$role->id)}}" class="btn btn-warning btn-sm me-1">
                                         Edit
                                     </a>
-
+                                    @endcan
+                                    
+                                  @can('Delete roles')
                                    <a href="javascript:void(0);" onclick="deleteRole({{ $role->id }})" class="btn btn-danger btn-sm me-1">
                                         Delete
                                     </a>
+                                    @endcan
                                 </td>
                             </tr>
                             @endforeach

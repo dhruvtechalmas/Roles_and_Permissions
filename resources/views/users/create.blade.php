@@ -29,12 +29,12 @@
                         <div class="card-body p-4">
 
 
-                            <form action="{{route('users.update', $user->id)}}" method="POST">
+                            <form action="{{route('users.store')}}" method="POST">
                                 @csrf
 
                                 <div class="mb-3">
                                     <label for="name" class="form-label">Name:</label>
-                                    <input type="text" id="name" name="name"  value="{{old('name' , $user->name) }}"  class="form-control 
+                                    <input type="text" id="name" name="name"  value="{{old('name') }}"  class="form-control 
                                     @error('name') is-invalid @enderror" 
                                     placeholder="Enter Name">
 
@@ -47,11 +47,33 @@
 
 
                                 <label for="email" class="form-label">Email:</label>
-                                    <input type="text" id="email" name="email"  value="{{old('email' , $user->email) }}"  class="form-control 
+                                    <input type="text" id="email" name="email"  value="{{old('email')}}"  class="form-control 
                                     @error('email') is-invalid @enderror" 
                                     placeholder="Enter Email">
 
                                     @error('email')
+                                        <div class="invalid-feedback">
+                                            {{ $message }}
+                                        </div>
+                                    @enderror
+
+                              <label for="password" class="form-label">Password:</label>
+                                    <input type="password" id="password" name="password"  value="{{old('password')}}"  class="form-control 
+                                    @error('password') is-invalid @enderror" 
+                                    placeholder="Enter password">
+
+                                    @error('password')
+                                        <div class="invalid-feedback">
+                                            {{ $message }}
+                                        </div>
+                                    @enderror
+
+                                     <label for="confirm_password " class="form-label">Confirm Password:</label>
+                                    <input type="password" id="confirm_password" name="confirm_password"  value="{{old('confirm_password')}}"  class="form-control 
+                                    @error('confirm_password') is-invalid @enderror" 
+                                    placeholder="Confirm Your Password">
+
+                                    @error('confirm_password')
                                         <div class="invalid-feedback">
                                             {{ $message }}
                                         </div>
@@ -68,8 +90,7 @@
                                     <div class="col-md-4 mb-4">
                                         <div class="form-check">
                                                 
-                                         <input  {{ ($hasRoles->contains($role->id)) ? 'checked' : '' }}
-                                          type="checkbox" class="form-check-input" id="role-{{ $role->id }}"  name="role[]" 
+                                         <input  type="checkbox" class="form-check-input" id="role-{{ $role->id }}"  name="role[]" 
                                                 value="{{ $role->name }}">
 
                                             <label class="form-check-label" for="role-{{ $role->id }}">
@@ -86,7 +107,7 @@
 
                                 <div class="text-center">
                                     <button type="submit" class="btn btn-primary btn-sm px-4">
-                                        Update
+                                        Create
                                     </button>
                                 </div>
                             </form>

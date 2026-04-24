@@ -12,10 +12,11 @@
                 <h2 class="mb-0 fs-4 fw-semibold">
                    Permissions
                 </h2>
-
+                @can('Create permissions')
                 <a href="{{ route('permissions.create') }}" class="btn btn-primary btn-sm px-4">
                     Create
                 </a>
+                 @endcan
             </div>
         </div>
     </x-slot>
@@ -46,13 +47,18 @@
                                 <td>{{$permission -> name}}</td>
                                 <td>{{ $permission->created_at->format('d-m-Y') }} </td>
                                 <td class="text-center">
+
+                                    @can('Edit permissions')                                        
                                     <a href="{{route('permissions.edit',$permission->id)}}" class="btn btn-warning btn-sm me-1">
                                         Edit
                                     </a>
+                                    @endcan
 
+                                    @can('Delete permissions')                                        
                                    <a href="javascript:void(0);" onclick="deletePermission({{ $permission->id }})" class="btn btn-danger btn-sm me-1">
                                         Delete
                                     </a>
+                                    @endcan
                                 </td>
                             </tr>
                             @endforeach

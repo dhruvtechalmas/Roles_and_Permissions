@@ -9,16 +9,16 @@
     <x-slot name="header">
         <div class="container-fluid">
             <div class="d-flex justify-content-between align-items-center">
-                <h2 class="mb-0 fs-3 fw-semibold">
-                   Users 
+                <h2 class="mb-0 fs-4 fw-semibold">
+                   Articles
                 </h2>
 
-                {{-- @can('Create users') --}}
-
-                <a href="{{ route('users.create') }}" class="btn btn-primary btn-sm px-4">
+                @can('Create articles')
+                <a href="{{ route('articles.create') }}" class="btn btn-primary btn-sm px-4">
                     Create
                 </a>
-                {{-- @endcan --}}
+                @endcan
+
             </div>
         </div>
     </x-slot>
@@ -30,38 +30,39 @@
 
             <div class="card shadow-sm">
                 <div class="card-body p-4">
-
+                    
                     <table class="table table-bordered table-hover align-middle mb-0">
                         <thead class="table-light">
                             <tr>
                                 <th width="10%">ID</th>
-                                <th>Name</th>
-                                <th>Email</th>              
-                                <th>Roles</th>              
-                                <th width="10%">Created</th>
+                                <th>Title</th>
+                                <th>Author</th>
+                                <th>Created</th>
                                 <th width="20%" class="text-center">Action</th>
                             </tr>
                         </thead>
                         <tbody>
-                            @if ($users->IsNotEmpty())
-                            @foreach($users as $user)
+                            @if ($articles->IsNotEmpty())
+                            @foreach($articles as $article)
 
                             <tr>
-                                <td>{{$user -> id}}</td>
-                                <td>{{$user -> name}}</td>
-                                <td>{{$user -> email}}</td>                              
-                                <td>{{$user -> roles->pluck('name')->implode(', ')}}</td>                              
-                                <td width="10%">{{ $user->created_at->format('d-m-Y') }} </td>
+                                <td>{{$article -> id}}</td>
+                                <td>{{$article -> title}}</td>
+                                <td>{{$article -> author}}</td>
+                                <td>{{ $article->created_at->format('d-m-Y') }} </td>
                                 <td class="text-center">
-                                    @can('Edit users')
-                                    <a href="{{route('users.edit',$user->id)}}" class="btn btn-warning btn-sm me-1">
+
+                                    @can('Edit articles')                                        
+                                    <a href="{{route('articles.edit',$article->id)}}" class="btn btn-warning btn-sm me-1">
                                         Edit
                                     </a>
                                     @endcan
-{{-- 
-                                   <a href="javascript:void(0);" onclick="deleteRole({{ $role->id }})" class="btn btn-danger btn-sm me-1">
+                                    
+                                    @can('Delete articles')                                        
+                                   <a href="javascript:void(0);" onclick="deleteArticle({{ $article->id }})" class="btn btn-danger btn-sm me-1">
                                         Delete
-                                    </a> --}}
+                                    </a>
+                                    @endcan
                                 </td>
                             </tr>
                             @endforeach
@@ -70,8 +71,8 @@
                         </tbody>
                     </table>
 
-                    <div class="my-3">
-                        {{ $users->links() }}
+                     <div class="my-3">
+                        {{ $articles->links() }}
                     </div>
 
                 </div>
@@ -82,12 +83,12 @@
 
     <x-slot name="script">
         
-        <script type="text/javascript">
+    <script type="text/javascript">
 
-          function deleteRole(id){
-             if(confirm("Are You Sure You Want to Delete?")){
+        function deleteArticle(id){
+            if(confirm("Are You Sure You Want to Delete?")){
                 $.ajax({
-                    url : '{{route("roles.destroy")}}',
+                    url : '{{route("articles.destroy")}}',
                     type : 'delete',
                     data : {id:id},
                     dataType : 'json',
@@ -95,7 +96,7 @@
                         'x-csrf-token' : '{{ csrf_token() }}'
                     },  
                     success : function(response){
-                        window.location.href = '{{route("roles.index")}}'
+                        window.location.href = '{{route("articles.index")}}'
                     }
                 });
             }
